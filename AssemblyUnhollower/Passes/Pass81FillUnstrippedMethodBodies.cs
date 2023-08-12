@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AssemblyUnhollower.Contexts;
 using AssemblyUnhollower.Utils;
 using Mono.Cecil;
+using System;
 using UnhollowerBaseLib;
 
 namespace AssemblyUnhollower.Passes
