@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using AssemblyUnhollower.Contexts;
 using AssemblyUnhollower.Utils;
 using Mono.Cecil;
-using System;
 using UnhollowerBaseLib;
 
 namespace AssemblyUnhollower.Passes
@@ -20,16 +19,7 @@ namespace AssemblyUnhollower.Passes
             
             foreach (var (unityMethod, newMethod, processedType, imports) in StuffToProcess)
             {
-                var success = false;
-                try
-                {
-                    success = UnstripTranslator.TranslateMethod(unityMethod, newMethod, processedType, imports);
-                }
-                catch(System.Exception E) 
-                { 
-                    success = false;
-                    Console.WriteLine(E.Message);
-                }
+                var success = UnstripTranslator.TranslateMethod(unityMethod, newMethod, processedType, imports);
                 if (success == false)
                 {
                     methodsFailed++;
