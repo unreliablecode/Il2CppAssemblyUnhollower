@@ -19,7 +19,16 @@ namespace AssemblyUnhollower.Passes
             
             foreach (var (unityMethod, newMethod, processedType, imports) in StuffToProcess)
             {
-                var success = UnstripTranslator.TranslateMethod(unityMethod, newMethod, processedType, imports);
+                var success = false;
+                try
+                {
+                    success = UnstripTranslator.TranslateMethod(unityMethod, newMethod, processedType, imports);
+                }
+                catch(Exception E) 
+                { 
+                    success = false;
+                    Console.WriteLine(E.Message);
+                }
                 if (success == false)
                 {
                     methodsFailed++;
