@@ -24,7 +24,7 @@ namespace AssemblyUnhollower.Passes
                 {
                     success = UnstripTranslator.TranslateMethod(unityMethod, newMethod, processedType, imports);
                 }
-                catch(Exception E) 
+                catch(System.Exception E) 
                 { 
                     success = false;
                     Console.WriteLine(E.Message);
