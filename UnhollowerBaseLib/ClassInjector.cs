@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -633,7 +634,8 @@ namespace UnhollowerRuntimeLib
 
         private static void HookGenericMethodGetMethod()
         {
-            var lib = LoadLibrary("GameAssembly.dll");
+            // keep in mind i have no idea what i'm doing, so this is probably very incorrect
+            var lib = LoadLibrary("libil2cpp.so");
             var getVirtualMethodEntryPoint = GetProcAddress(lib, nameof(IL2CPP.il2cpp_object_get_virtual_method));
             LogSupport.Trace($"il2cpp_object_get_virtual_method entry address: {getVirtualMethodEntryPoint}");
 
@@ -696,7 +698,7 @@ namespace UnhollowerRuntimeLib
 
         private static void HookClassFromType()
         {
-            var lib = LoadLibrary("GameAssembly.dll");
+            var lib = LoadLibrary("libil2cpp.so");
             var classFromTypeEntryPoint = GetProcAddress(lib, nameof(IL2CPP.il2cpp_class_from_il2cpp_type));
             LogSupport.Trace($"il2cpp_class_from_il2cpp_type entry address: {classFromTypeEntryPoint}");
 
@@ -743,7 +745,7 @@ namespace UnhollowerRuntimeLib
 
         private static void HookClassFromName()
         {
-            var lib = LoadLibrary("GameAssembly.dll");
+            var lib = LoadLibrary("libil2cpp.so");
             var classFromNameEntryPoint = GetProcAddress(lib, nameof(IL2CPP.il2cpp_class_from_name));
             LogSupport.Trace($"il2cpp_class_from_name entry address: {classFromNameEntryPoint}");
 
@@ -778,11 +780,11 @@ namespace UnhollowerRuntimeLib
         }
         #endregion
 
-        [DllImport("kernel32", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
-        static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
 
-        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Ansi)]
-        static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
 
         private class DoHookDetour : IManagedDetour
         {
